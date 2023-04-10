@@ -20,6 +20,7 @@ public class Bomb : MonoBehaviour
     [SerializeField] float inBetweenExplosionTime = 0.15f;
 
     [Header("Explosion")]
+    [SerializeField] float explosionTime = 1;
     [SerializeField] LayerMask mask;
     [SerializeField] AudioSource source;
     [SerializeField] AudioClip explosionClip;
@@ -140,6 +141,10 @@ public class Bomb : MonoBehaviour
         {
             CheckHits(hit);
         }
+
+        yield return new WaitForSeconds(explosionTime);
+
+        gameObject.SetActive(false);
 
     }
     

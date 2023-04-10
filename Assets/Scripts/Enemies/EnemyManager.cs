@@ -21,12 +21,12 @@ public class EnemyManager : MonoBehaviour
     {
         Enemy.OnEnemyDeath += EnqueueEnemy;
         LevelController.OnLevelSpawned += UpdateTakenPositions;
-        BombManager.OnBombPlaced += UpdatePosition;
+        BombManager.OnBombInteraction += UpdatePosition;
     }
 
-    void UpdatePosition(LevelMapPos pos)
+    void UpdatePosition(LevelMapPos pos, bool isOccupied)
     {
-        levelMap[pos.row, pos.column] = true;
+        levelMap[pos.row, pos.column] = isOccupied;
     }
 
     void UpdateTakenPositions(bool[,] positionTakenMap)
@@ -111,7 +111,7 @@ public class EnemyManager : MonoBehaviour
     {
         Enemy.OnEnemyDeath -= EnqueueEnemy;
         LevelController.OnLevelSpawned -= UpdateTakenPositions;
-        BombManager.OnBombPlaced -= UpdatePosition;
+        BombManager.OnBombInteraction -= UpdatePosition;
     }
 
     public LevelMapPos RetrieveFreePos(LevelMapPos origin)

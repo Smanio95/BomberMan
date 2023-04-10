@@ -17,5 +17,5 @@ MonoBehaviour:
   fastEnemies: 4
   rows: 10
   columns: 10
-  destructibles: 25
+  destructibles: 40
   destructiblePrefab: {fileID: 8025606062569156927, guid: 312fbdf51e5686c49abe9b7d4019e3eb, type: 3}

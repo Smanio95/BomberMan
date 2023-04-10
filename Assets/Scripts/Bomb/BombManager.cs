@@ -9,8 +9,8 @@ public class BombManager : MonoBehaviour
 
     private readonly Queue<Bomb> bombQueue = new();
 
-    public delegate void BombPlaced(LevelMapPos pos);
-    public static BombPlaced OnBombPlaced;
+    public delegate void BombInteraction(LevelMapPos pos, bool isOccupied = true);
+    public static BombInteraction OnBombInteraction;
 
     public void PlaceBomb(Vector3 position)
     {
@@ -18,7 +18,7 @@ public class BombManager : MonoBehaviour
             position.y,
             Mathf.Round(position.z / Constants._CellWidth) * Constants._CellWidth);
 
-        OnBombPlaced?.Invoke(CommonUtils.IntoLevelMapPos(position));
+        OnBombInteraction?.Invoke(CommonUtils.IntoLevelMapPos(position));
 
         Bomb bomb;
 
@@ -38,6 +38,7 @@ public class BombManager : MonoBehaviour
     public void EnqueueBomb(Bomb bomb)
     {
         bombQueue.Enqueue(bomb);
+        OnBombInteraction?.Invoke(CommonUtils.IntoLevelMapPos(bomb.transform.position), false);
     }
 
 }
