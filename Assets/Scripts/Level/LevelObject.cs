@@ -11,5 +11,5 @@ public class LevelObject : ScriptableObject
     public int rows = 10;
     public int columns = 10;
     public int destructibles = 5;
-    public GameObject destructiblePrefab;
+    public Destructible destructiblePrefab;
 }

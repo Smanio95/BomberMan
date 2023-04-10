@@ -180,7 +180,7 @@ MonoBehaviour:
   _Mesh: {fileID: 7900727734625715149}
   appearSpeed: 3
   isSimple: 1
-  movementSpeed: 5
+  movementSpeed: 8
   playerMask:
     serializedVersion: 2
     m_Bits: 8

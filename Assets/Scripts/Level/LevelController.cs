@@ -96,15 +96,14 @@ public class LevelController : MonoBehaviour
             }
         }
 
-        OnLevelSpawning?.Invoke(false);
-
         InsertEnemies();
     }
 
     void CreateDestructible(int row, int column, ref int toSpawn)
     {
         Vector3 position = new(column * Constants._CellWidth, currentLevel.yPosition, row * Constants._CellWidth);
-        Instantiate(currentLevel.destructiblePrefab, position, Quaternion.identity, destructiblesParent);
+        Destructible destructible = Instantiate(currentLevel.destructiblePrefab, position, Quaternion.identity, destructiblesParent);
+        destructible.currentPos = new(row, column);
         levelMap[row, column] = true;
         toSpawn--;
     }
@@ -144,6 +143,8 @@ public class LevelController : MonoBehaviour
             TakeRandom(freePositions, false);
             yield return new WaitForSeconds(waitingTime);
         }
+
+        OnLevelSpawning?.Invoke(false);
 
     }
 

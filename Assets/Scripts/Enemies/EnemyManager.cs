@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class EnemyManager : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class EnemyManager : MonoBehaviour
         Enemy.OnEnemyDeath += EnqueueEnemy;
         LevelController.OnLevelSpawned += UpdateTakenPositions;
         BombManager.OnBombInteraction += UpdatePosition;
+        Destructible.OnDestructibleDestroy += UpdatePosition;
     }
 
     void UpdatePosition(LevelMapPos pos, bool isOccupied)
@@ -100,18 +102,11 @@ public class EnemyManager : MonoBehaviour
         }
 
         spawnedEnemies--;
-        
+
         if (spawnedEnemies == 0)
         {
             OnEnemiesKilled?.Invoke();
         }
-    }
-
-    private void OnDestroy()
-    {
-        Enemy.OnEnemyDeath -= EnqueueEnemy;
-        LevelController.OnLevelSpawned -= UpdateTakenPositions;
-        BombManager.OnBombInteraction -= UpdatePosition;
     }
 
     public LevelMapPos RetrieveFreePos(LevelMapPos origin)
@@ -121,14 +116,14 @@ public class EnemyManager : MonoBehaviour
         int maxRow = levelMap.GetLength(0) - 1,
             maxCol = levelMap.GetLength(1) - 1;
 
-        AddFreePos(origin, Direction.up, freePos, maxRow, maxCol);
-        AddFreePos(origin, Direction.right, freePos, maxRow, maxCol);
-        AddFreePos(origin, Direction.down, freePos, maxRow, maxCol);
-        AddFreePos(origin, Direction.left, freePos, maxRow, maxCol);
+        foreach (Direction dir in Enum.GetValues(typeof(Direction)))
+        {
+            AddFreePos(origin, dir, freePos, maxRow, maxCol);
+        }
 
         if (freePos.Count > 0)
         {
-            LevelMapPos newPos = freePos[Random.Range(0, freePos.Count)];
+            LevelMapPos newPos = freePos[UnityEngine.Random.Range(0, freePos.Count)];
             levelMap[origin.row, origin.column] = false;
             levelMap[newPos.row, newPos.column] = true;
             return newPos;
@@ -159,6 +154,14 @@ public class EnemyManager : MonoBehaviour
                     freePos.Add(new(origin.row, origin.column - 1));
                 break;
         }
+    }
+
+    private void OnDestroy()
+    {
+        Enemy.OnEnemyDeath -= EnqueueEnemy;
+        LevelController.OnLevelSpawned -= UpdateTakenPositions;
+        BombManager.OnBombInteraction -= UpdatePosition;
+        Destructible.OnDestructibleDestroy -= UpdatePosition;
     }
 
 }

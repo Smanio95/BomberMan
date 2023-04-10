@@ -53,6 +53,7 @@ public class Bomb : MonoBehaviour
     private void OnEnable()
     {
         OnBombPlaced += StopTick;
+        Enemy.OnPlayerDeath += StopTick;
 
         freePos = new();
         hits = new();
@@ -71,6 +72,7 @@ public class Bomb : MonoBehaviour
     private void OnDisable()
     {
         OnBombPlaced -= StopTick;
+        Enemy.OnPlayerDeath -= StopTick;
 
         StopTick();
 
