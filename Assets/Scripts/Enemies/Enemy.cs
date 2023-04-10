@@ -25,10 +25,10 @@ public class Enemy : AppearingObject
     private new void OnEnable()
     {
         base.OnEnable();
-        nextPosition = transform.position;
+        LevelMapPos nextPos = EM.RetrieveFreePos(currentPos);
+        nextPosition = CommonUtils.IntoVector3(nextPos, transform.position.y);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!hasSpawned) return;
@@ -63,14 +63,23 @@ public class Enemy : AppearingObject
         OnEnemyDeath?.Invoke(isSimple, this);
     }
 
+
     void CalculateNextPosition(float height)
     {
-        LevelMapPos nextPos = EM.RetrieveFreePos(currentPos);
+        LevelMapPos nextPos = CommonUtils.IntoLevelMapPos(nextPosition);
+
+        if (nextPos.row != currentPos.row || nextPos.column != currentPos.column)
+        {
+            EM.UpdatePosition(currentPos, false);
+            currentPos = nextPos;
+        }
+
+        nextPos = EM.RetrieveFreePos(currentPos);
 
         if (nextPos.row == currentPos.row && nextPos.column == currentPos.column) return;
 
-        currentPos = nextPos;
         nextPosition = CommonUtils.IntoVector3(nextPos, height);
+
     }
 
 }

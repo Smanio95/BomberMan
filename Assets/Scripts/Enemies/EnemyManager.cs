@@ -26,7 +26,7 @@ public class EnemyManager : MonoBehaviour
         Destructible.OnDestructibleDestroy += UpdatePosition;
     }
 
-    void UpdatePosition(LevelMapPos pos, bool isOccupied)
+    public void UpdatePosition(LevelMapPos pos, bool isOccupied)
     {
         levelMap[pos.row, pos.column] = isOccupied;
     }
@@ -67,6 +67,8 @@ public class EnemyManager : MonoBehaviour
 
         enemy.currentPos = new(row, column);
 
+        enemy.gameObject.SetActive(true);
+
         spawnedEnemies++;
     }
 
@@ -84,8 +86,6 @@ public class EnemyManager : MonoBehaviour
             enemy = targetQueue.Dequeue();
             enemy.transform.SetPositionAndRotation(position, Quaternion.identity);
         }
-
-        enemy.gameObject.SetActive(true);
 
         return enemy;
     }
@@ -124,7 +124,6 @@ public class EnemyManager : MonoBehaviour
         if (freePos.Count > 0)
         {
             LevelMapPos newPos = freePos[UnityEngine.Random.Range(0, freePos.Count)];
-            levelMap[origin.row, origin.column] = false;
             levelMap[newPos.row, newPos.column] = true;
             return newPos;
         }
